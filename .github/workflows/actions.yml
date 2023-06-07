@@ -8,7 +8,7 @@ jobs:
       github_sha: ${{ github.sha }}
     steps:
     - name: Copy repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@main
     - name: Build image
       run: docker build --tag islasgeci/reproducibility_inspector_setup:latest --tag islasgeci/reproducibility_inspector_setup:${github_sha:0:4} .
     - name: Check format
