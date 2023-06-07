@@ -1,4 +1,4 @@
-all: init create_server
+all: create_server
 
 .PHONY: \
 	all \
@@ -11,10 +11,10 @@ all: init create_server
 check:
 	cd src && terraform fmt -check
 
-create_server:
+create_server: init
 	cd src && terraform apply -auto-approve
 
-destroy_server:
+destroy_server: init
 	cd src && terraform destroy -auto-approve
 
 clean:
