@@ -65,3 +65,12 @@ resource "azurerm_linux_virtual_machine" "inspector" {
     version   = "latest"
   }
 }
+
+data "azurerm_public_ip" "inspector" {
+  name                = azurerm_public_ip.inspector.name
+  resource_group_name = azurerm_linux_virtual_machine.inspector.resource_group_name
+}
+
+output "inspector_ip" {
+  value = data.azurerm_public_ip.inspector.ip_address
+}

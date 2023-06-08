@@ -30,7 +30,8 @@ format:
 	cd src && terraform fmt
 
 host_known:
-	ssh-keyscan "$${INSPECTOR_IP}" > "$${HOME}/.ssh/known_hosts"
+	cd src && \
+	ssh-keyscan "$(terraform output -raw inspector_ip)" > "$${HOME}/.ssh/known_hosts"
 
 init:
 	cd src && \
@@ -38,7 +39,9 @@ init:
 	terraform init
 
 setup_server:
-	ansible-playbook ansible/inspector.yml
+	cd src && \
+	export INSPECTOR_IP=$$(terraform output -raw inspector_ip) && \
+	ansible-playbook /workdir/ansible/inspector.yml
 
 sleep:
 	@echo "⏳ Waiting to avoid conflicts with APT. 😴 💤 😪"
