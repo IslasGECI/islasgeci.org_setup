@@ -1,0 +1,57 @@
+---
+- name: Set system up
+  hosts: inspector
+  tasks:
+    - name: Set time zone
+      timezone:
+        name: America/Los_Angeles
+      become: true
+
+- name: Install software using package managers
+  hosts: inspector
+  tasks:
+    - name: Update system
+      apt:
+        update_cache: true
+      become: true
+    - name: Install cURL
+      apt:
+        name: "curl"
+        state: present
+      become: true
+    - name: Install Docker
+      apt:
+        name: "docker.io"
+        state: present
+      become: true
+    - name: Install Docker-compose
+      apt:
+        name: "docker-compose"
+        state: present
+      become: true
+    - name: Install Git
+      apt:
+        name: "git"
+        state: present
+      become: true
+    - name: Install Make
+      apt:
+        name: "make"
+        state: present
+      become: true
+    - name: Install Docker SDK for Python
+      pip:
+        name: docker
+      notify: Restart server
+    - name: Add '{{ ansible_user_id }}' to docker group
+      user:
+        name: "{{ ansible_user_id }}"
+        groups: docker
+        append: true
+      become: true
+      notify: Restart server
+  handlers:
+    - name: Restart server
+      reboot:
+      become: true
+

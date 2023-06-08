@@ -1,5 +1,7 @@
 FROM ubuntu:22.04
-COPY . .
+WORKDIR /workdir
+COPY . /workdir
+COPY .config/hosts /etc/ansible/hosts
 RUN apt update && apt install --yes \
     ansible \
     ansible-lint \
