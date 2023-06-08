@@ -31,7 +31,7 @@ format:
 
 host_known:
 	cd src && \
-	ssh-keyscan "$(terraform output -raw inspector_ip)" > "$${HOME}/.ssh/known_hosts"
+	ssh-keyscan "$$(terraform output -raw inspector_ip)" > "$${HOME}/.ssh/known_hosts"
 
 init:
 	cd src && \
