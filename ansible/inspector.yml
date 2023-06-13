@@ -70,6 +70,11 @@
         recurse: yes
         owner: ciencia_datos
         group: ciencia_datos
+    - name: Copy SSH keys
+      copy:
+        src: /root/.ssh/
+        dest: /home/ciencia_datos/.ssh/
+        mode: '0600'
     - name: Copy secrets
       copy:
         src: /root/.vault/
@@ -83,6 +88,7 @@
         restart_policy: "always"
         detach: true
         volumes:
+          - /home/ciencia_datos/.ssh:/home/ciencia_datos/.ssh
           - /home/ciencia_datos/.testmake:/home/ciencia_datos/.testmake
           - /home/ciencia_datos/.vault:/home/ciencia_datos/.vault
           - /var/run/docker.sock:/var/run/docker.sock
