@@ -72,13 +72,13 @@
         group: ciencia_datos
     - name: Copy SSH keys
       copy:
-        src: /root/.ssh/
-        dest: /home/ciencia_datos/.ssh/
+        src: /root/.ssh/id_rsa
+        dest: /home/ciencia_datos/.ssh/id_rsa
         mode: '0600'
     - name: Copy secrets
       copy:
-        src: /root/.vault/
-        dest: /home/ciencia_datos/.vault/
+        src: /root/.vault/.secrets
+        dest: /home/ciencia_datos/.vault/.secrets
         mode: '0600'
     - name: Start the container
       community.docker.docker_container:
@@ -88,8 +88,8 @@
         restart_policy: "always"
         detach: true
         volumes:
-          - /home/ciencia_datos/.ssh:/home/ciencia_datos/.ssh
+          - /home/ciencia_datos/.ssh/id_rsa:/home/ciencia_datos/.ssh/id_rsa
           - /home/ciencia_datos/.testmake:/home/ciencia_datos/.testmake
-          - /home/ciencia_datos/.vault:/home/ciencia_datos/.vault
+          - /home/ciencia_datos/.vault/.secrets:/home/ciencia_datos/.vault/.secrets
           - /var/run/docker.sock:/var/run/docker.sock
 
