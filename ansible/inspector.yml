@@ -77,8 +77,8 @@
         mode: '0600'
     - name: Copy secrets
       copy:
-        src: /root/.vault/.secrets
-        dest: /home/ciencia_datos/.vault/.secrets
+        src: /root/.vault/
+        dest: /home/ciencia_datos/.vault/
         mode: '0600'
     - name: Start the container
       community.docker.docker_container:
