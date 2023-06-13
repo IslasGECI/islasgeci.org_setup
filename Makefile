@@ -44,5 +44,5 @@ setup_server:
 	ansible-playbook /workdir/ansible/inspector.yml
 
 sleep:
-	@echo "⏳ Waiting to avoid conflicts with APT. 😴 💤 😪"
+	@echo "⏳ Idly waiting to avoid conflicts with APT. 😴 💤 😪"
 	sleep 100
