@@ -74,6 +74,7 @@
       copy:
         src: /root/.vault/
         dest: /home/ciencia_datos/.vault/
+        mode: '0600'
     - name: Start the container
       community.docker.docker_container:
         name: reproducibility_inspector
@@ -82,7 +83,6 @@
         restart_policy: "always"
         detach: true
         volumes:
-          - /home/ciencia_datos/.ssh/id_rsa:/root/.ssh/id_rsa
           - /home/ciencia_datos/.testmake:/home/ciencia_datos/.testmake
           - /home/ciencia_datos/.vault:/home/ciencia_datos/.vault
           - /var/run/docker.sock:/var/run/docker.sock
