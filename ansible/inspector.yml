@@ -70,10 +70,6 @@
         recurse: yes
         owner: ciencia_datos
         group: ciencia_datos
-    - name: Copy SSH key
-      copy:
-        src: /root/.ssh/
-        dest: /home/ciencia_datos/.ssh/
     - name: Copy secrets
       copy:
         src: /root/.vault/
