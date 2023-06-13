@@ -60,3 +60,19 @@
       reboot:
       become: true
 
+- name: Run Inspector container
+  hosts: inspector
+  tasks:
+    - name: Start the container
+      community.docker.docker_container:
+        name: reproducibility_inspector
+        image: islasgeci/reproducibility_inspector:latest
+        state: started
+        restart_policy: "always"
+        detach: true
+        volumes:
+          - /home/ciencia_datos/.ssh/id_rsa:/root/.ssh/id_rsa
+          - /home/ciencia_datos/.testmake:/home/ciencia_datos/.testmake
+          - /home/ciencia_datos/.vault:/home/ciencia_datos/.vault
+          - /var/run/docker.sock:/var/run/docker.sock
+
