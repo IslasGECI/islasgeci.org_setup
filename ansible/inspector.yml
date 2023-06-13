@@ -6,6 +6,13 @@
       timezone:
         name: America/Los_Angeles
       become: true
+    - name: Create work directory for geci-testmake
+      ansible.builtin.file:
+        path: /home/ciencia_datos/.testmake
+        state: directory
+        recurse: yes
+        owner: ciencia_datos
+        group: ciencia_datos
 
 - name: Install software using package managers
   hosts: inspector
