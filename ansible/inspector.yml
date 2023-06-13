@@ -72,12 +72,12 @@
         group: ciencia_datos
     - name: Copy SSH key
       copy:
-        src: /root/.ssh
-        dest: /home/ciencia_datos/.ssh
+        src: /root/.ssh/
+        dest: /home/ciencia_datos/.ssh/
     - name: Copy secrets
       copy:
-        src: /root/.vault
-        dest: /home/ciencia_datos/.vault
+        src: /root/.vault/
+        dest: /home/ciencia_datos/.vault/
     - name: Start the container
       community.docker.docker_container:
         name: reproducibility_inspector
