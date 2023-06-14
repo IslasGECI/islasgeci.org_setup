@@ -85,6 +85,7 @@
         name: reproducibility_inspector
         image: islasgeci/reproducibility_inspector:latest
         state: started
+        user: ciencia_datos
         restart_policy: "always"
         detach: true
         volumes:
