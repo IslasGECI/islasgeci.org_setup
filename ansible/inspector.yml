@@ -90,5 +90,5 @@
         volumes:
           - /home/ciencia_datos/.testmake:/home/ciencia_datos/.testmake
           - /home/ciencia_datos/.vault/.secrets:/home/ciencia_datos/.vault/.secrets
-          - /tmp/id_rsa:/home/ciencia_datos/.ssh/id_rsa
+          - /tmp/id_rsa:/root/.ssh/id_rsa
           - /var/run/docker.sock:/var/run/docker.sock
