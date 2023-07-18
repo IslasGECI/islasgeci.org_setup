@@ -10,15 +10,15 @@ jobs:
     - name: Copy repository
       uses: actions/checkout@main
     - name: Build image
-      run: docker build --tag islasgeci/reproducibility_inspector_setup:latest --tag islasgeci/reproducibility_inspector_setup:${github_sha:0:4} .
+      run: docker build --tag islasgeci/islasgeci.org_setup:latest --tag islasgeci/islasgeci.org_setup:${github_sha:0:4} .
     - name: Check format
-      run: docker run islasgeci/reproducibility_inspector_setup:latest make check
+      run: docker run islasgeci/islasgeci.org_setup:latest make check
     - name: Docker log-in
       env:
         docker_username: ${{ secrets.docker_username }}
         docker_password: ${{ secrets.docker_password }}
       run: echo "${docker_password}" | docker login -u "${docker_username}" --password-stdin
     - name: Upload image to Docker Hub
-      run: docker push islasgeci/reproducibility_inspector_setup:latest
+      run: docker push islasgeci/islasgeci.org_setup:latest
     - name: Tag image with hash
-      run: docker push islasgeci/reproducibility_inspector_setup:${github_sha:0:4}
+      run: docker push islasgeci/islasgeci.org_setup:${github_sha:0:4}

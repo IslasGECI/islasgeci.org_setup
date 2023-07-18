@@ -82,8 +82,8 @@
         mode: '0600'
     - name: Start the container
       community.docker.docker_container:
-        name: reproducibility_inspector
-        image: islasgeci/reproducibility_inspector:latest
+        name: islasgeci.org
+        image: islasgeci/islasgeci.org:latest
         state: started
         restart_policy: "always"
         detach: true

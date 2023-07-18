@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: islasgeci/reproducibility_inspector_setup:latest
+    image: islasgeci/islasgeci.org_setup:latest
     command: make
     environment:
       DO_PAT: $DO_PAT
