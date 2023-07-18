@@ -31,7 +31,7 @@ format:
 
 host_known:
 	cd src && \
-	ssh-keyscan "$$(terraform output -raw inspector_ip)" > "$${HOME}/.ssh/known_hosts"
+	ssh-keyscan "$$(terraform output -raw webserver_ip)" > "$${HOME}/.ssh/known_hosts"
 
 init:
 	cd src && \
@@ -40,8 +40,8 @@ init:
 
 setup_server:
 	cd src && \
-	export INSPECTOR_IP=$$(terraform output -raw inspector_ip) && \
-	ansible-playbook /workdir/ansible/inspector.yml
+	export WEBSERVER_IP=$$(terraform output -raw webserver_ip) && \
+	ansible-playbook /workdir/ansible/webserver.yml
 
 sleep:
 	@echo "⏳ Idly waiting to avoid conflicts with APT. 😴 💤 😪"

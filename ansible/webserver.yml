@@ -1,6 +1,6 @@
 ---
 - name: Set system up
-  hosts: inspector
+  hosts: webserver
   tasks:
     - name: Set time zone
       timezone:
@@ -8,7 +8,7 @@
       become: true
 
 - name: Install software using package managers
-  hosts: inspector
+  hosts: webserver
   tasks:
     - name: Update system
       apt:
@@ -60,8 +60,8 @@
       reboot:
       become: true
 
-- name: Run Inspector container
-  hosts: inspector
+- name: Run Web Server container
+  hosts: webserver
   tasks:
     - name: Create work directory for geci-testmake
       ansible.builtin.file:
