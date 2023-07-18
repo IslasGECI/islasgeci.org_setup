@@ -63,13 +63,6 @@
 - name: Run Web Server container
   hosts: webserver
   tasks:
-    - name: Create work directory for geci-testmake
-      ansible.builtin.file:
-        path: /home/ciencia_datos/.testmake
-        state: directory
-        recurse: yes
-        owner: ciencia_datos
-        group: ciencia_datos
     - name: Copy SSH keys
       copy:
         src: /root/.ssh/id_rsa
@@ -88,7 +81,6 @@
         restart_policy: "always"
         detach: true
         volumes:
-          - /home/ciencia_datos/.testmake:/home/ciencia_datos/.testmake
           - /home/ciencia_datos/.vault/.secrets:/home/ciencia_datos/.vault/.secrets
           - /tmp/id_rsa:/root/.ssh/id_rsa
           - /var/run/docker.sock:/var/run/docker.sock
