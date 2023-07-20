@@ -19,6 +19,7 @@ resource "azurerm_subnet" "webserver" {
 
 resource "azurerm_public_ip" "webserver" {
   name                = "webserver-public-ip"
+  domain_name_label   = "webserver"
   location            = azurerm_resource_group.webserver.location
   resource_group_name = azurerm_resource_group.webserver.name
   allocation_method   = "Static"
