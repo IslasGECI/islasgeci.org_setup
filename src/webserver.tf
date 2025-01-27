@@ -48,7 +48,7 @@ resource "azurerm_linux_virtual_machine" "webserver" {
   ]
 
   admin_ssh_key {
-    username   = "geci"
+    username   = "ciencia_datos"
     public_key = file("~/.ssh/id_rsa.pub")
   }
 
