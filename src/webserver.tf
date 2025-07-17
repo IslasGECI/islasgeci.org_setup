@@ -19,6 +19,7 @@ resource "azurerm_subnet" "webserver" {
 
 resource "azurerm_public_ip" "webserver" {
   name                = "webserver-public-ip"
+  domain_name_label   = "webserver"
   location            = azurerm_resource_group.webserver.location
   resource_group_name = azurerm_resource_group.webserver.name
   allocation_method   = "Static"
@@ -41,7 +42,7 @@ resource "azurerm_linux_virtual_machine" "webserver" {
   name                = "webserver"
   resource_group_name = azurerm_resource_group.webserver.name
   location            = azurerm_resource_group.webserver.location
-  size                = "Standard_B1s"
+  size                = "Standard_B4ms"
   admin_username      = "ciencia_datos"
   network_interface_ids = [
     azurerm_network_interface.webserver.id,
@@ -55,12 +56,13 @@ resource "azurerm_linux_virtual_machine" "webserver" {
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
+    disk_size_gb         = 128
   }
 
   source_image_reference {
     publisher = "canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts-gen2"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
     version   = "latest"
   }
 }
