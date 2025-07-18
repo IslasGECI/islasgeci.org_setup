@@ -63,7 +63,9 @@
       notify: Restart server
   handlers:
     - name: Restart server
-      reboot:
+      ansible.builtin.reboot:
+        reboot_timeout: 1200
+        post_reboot_delay: 30
       become: true
 
 - name: Run Web Server container
