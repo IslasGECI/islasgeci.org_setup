@@ -41,7 +41,7 @@ resource "azurerm_linux_virtual_machine" "webserver" {
   name                = "webserver"
   resource_group_name = azurerm_resource_group.webserver.name
   location            = azurerm_resource_group.webserver.location
-  size                = "Standard_B4ms"
+  size                = "Standard_B2s"
   admin_username      = "ciencia_datos"
   network_interface_ids = [
     azurerm_network_interface.webserver.id,
@@ -55,7 +55,7 @@ resource "azurerm_linux_virtual_machine" "webserver" {
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
-    disk_size_gb         = 128
+    disk_size_gb         = 64
   }
 
   source_image_reference {
