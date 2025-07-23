@@ -44,9 +44,15 @@
         name: "python3-pip"
         state: present
       become: true
+    - name: Install pipx
+      ansible.builtin.apt:
+        name: "pipx"
+        state: present
+      become: true
     - name: Install Docker SDK for Python
-      pip:
+      community.general.pipx:
         name: docker
+        install_deps: true
       notify: Restart server
     - name: Add '{{ ansible_user_id }}' to docker group
       user:
@@ -57,7 +63,9 @@
       notify: Restart server
   handlers:
     - name: Restart server
-      reboot:
+      ansible.builtin.reboot:
+        reboot_timeout: 1200
+        post_reboot_delay: 30
       become: true
 
 - name: Run Web Server container
