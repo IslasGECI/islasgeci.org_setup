@@ -16,8 +16,8 @@ check:
 	cd src && terraform fmt -check
 
 clean:
-	rm --force --recursive state/.terraform
-	rm --force state/.terraform.lock.hcl
+	rm --force --recursive src/.terraform
+	rm --force src/.terraform.lock.hcl
 	rm --force state/terraform.tfstate*
 
 create_server: init
@@ -34,8 +34,8 @@ host_known:
 	ssh-keyscan "$$(terraform output -raw webserver_ip)" > "$${HOME}/.ssh/known_hosts"
 
 init:
+	mkdir --parents state
 	cd src && \
-	mkdir --parents state \
 	terraform init
 
 setup_server:
