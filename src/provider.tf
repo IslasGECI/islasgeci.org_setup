@@ -4,6 +4,9 @@ terraform {
       source = "hashicorp/aws"
     }
   }
+  backend "local" {
+    path = "/workdir/state/terraform.tfstate"
+  }
 }
 
 provider "aws" {
