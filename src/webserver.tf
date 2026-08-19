@@ -1,155 +1,149 @@
-resource "azurerm_resource_group" "webserver" {
-  name     = "webserver-resources"
-  location = "West US 2"
-}
-
-resource "azurerm_virtual_network" "webserver" {
-  name                = "webserver-network"
-  address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.webserver.location
-  resource_group_name = azurerm_resource_group.webserver.name
-}
-
-resource "azurerm_subnet" "webserver" {
-  name                 = "internal"
-  resource_group_name  = azurerm_resource_group.webserver.name
-  virtual_network_name = azurerm_virtual_network.webserver.name
-  address_prefixes     = ["10.0.2.0/24"]
-}
-
-resource "azurerm_public_ip" "webserver" {
-  name                = "webserver-public-ip"
-  location            = azurerm_resource_group.webserver.location
-  resource_group_name = azurerm_resource_group.webserver.name
-  allocation_method   = "Static"
-}
-
-resource "azurerm_network_security_group" "webserver" {
-  name                = "webserver-nsg"
-  location            = azurerm_resource_group.webserver.location
-  resource_group_name = azurerm_resource_group.webserver.name
-
-  security_rule {
-    name                       = "AllowSSH"
-    priority                   = 90
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "AllowHTTP"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "AllowPort100"
-    priority                   = 120
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "100"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "AllowPort200"
-    priority                   = 130
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "200"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "AllowPort300"
-    priority                   = 140
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "300"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "AllowPort500"
-    priority                   = 110
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "500"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
+resource "aws_vpc" "webserver" {
+  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name = "webserver-vpc"
   }
 }
 
-resource "azurerm_network_interface" "webserver" {
-  name                      = "webserver-nic"
-  location                  = azurerm_resource_group.webserver.location
-  resource_group_name       = azurerm_resource_group.webserver.name
-  network_security_group_id = azurerm_network_security_group.webserver.id
-
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.webserver.id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.webserver.id
+resource "aws_internet_gateway" "webserver" {
+  vpc_id = aws_vpc.webserver.id
+  tags = {
+    Name = "webserver-igw"
   }
 }
 
-resource "azurerm_linux_virtual_machine" "webserver" {
-  name                = "webserver"
-  resource_group_name = azurerm_resource_group.webserver.name
-  location            = azurerm_resource_group.webserver.location
-  size                = "Standard_B2s"
-  admin_username      = "ciencia_datos"
-  network_interface_ids = [
-    azurerm_network_interface.webserver.id,
-  ]
-
-  admin_ssh_key {
-    username   = "ciencia_datos"
-    public_key = file("~/.ssh/id_rsa.pub")
-  }
-
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-    disk_size_gb         = 64
-  }
-
-  source_image_reference {
-    publisher = "canonical"
-    offer     = "ubuntu-24_04-lts"
-    sku       = "server"
-    version   = "latest"
+resource "aws_subnet" "webserver" {
+  vpc_id            = aws_vpc.webserver.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "us-east-1a"
+  tags = {
+    Name = "webserver-subnet"
   }
 }
 
-data "azurerm_public_ip" "webserver" {
-  name                = azurerm_public_ip.webserver.name
-  resource_group_name = azurerm_linux_virtual_machine.webserver.resource_group_name
+resource "aws_security_group" "webserver" {
+  name        = "webserver-sg"
+  description = "Security group for webserver"
+  vpc_id      = aws_vpc.webserver.id
+
+  ingress {
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Port 100"
+    from_port   = 100
+    to_port     = 100
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Port 200"
+    from_port   = 200
+    to_port     = 200
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Port 300"
+    from_port   = 300
+    to_port     = 300
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Port 500"
+    from_port   = 500
+    to_port     = 500
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_network_interface" "webserver" {
+  subnet_id       = aws_subnet.webserver.id
+  security_groups = [aws_security_group.webserver.id]
+
+  tags = {
+    Name = "webserver-nic"
+  }
+}
+
+resource "aws_eip" "webserver" {
+  domain            = "vpc"
+  network_interface = aws_network_interface.webserver.id
+  depends_on        = [aws_vpc.webserver]
+
+  tags = {
+    Name = "webserver-public-ip"
+  }
+}
+
+resource "aws_route_table" "webserver" {
+  vpc_id = aws_vpc.webserver.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.webserver.id
+  }
+  tags = {
+    Name = "webserver-rt"
+  }
+}
+
+resource "aws_route_table_association" "webserver" {
+  subnet_id      = aws_subnet.webserver.id
+  route_table_id = aws_route_table.webserver.id
+}
+
+resource "aws_key_pair" "webserver" {
+  public_key = file("~/.ssh/id_rsa.pub")
+  tags = {
+    Name = "webserver-key"
+  }
+}
+
+resource "aws_instance" "webserver" {
+  ami           = "ami-02ebdb11bae1b2486"
+  instance_type = "t3.medium"
+  key_name      = aws_key_pair.webserver.id
+
+  network_interface {
+    network_interface_id = aws_network_interface.webserver.id
+    device_index         = 0
+  }
+
+  tags = {
+    Name = "webserver"
+  }
+
+  root_block_device {
+    volume_size = 128
+    volume_type = "gp3"
+  }
 }
 
 output "webserver_ip" {
-  value = data.azurerm_public_ip.webserver.ip_address
+  value = aws_eip.webserver.public_ip
 }
