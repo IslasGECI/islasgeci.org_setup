@@ -2,6 +2,13 @@
 - name: Set system up
   hosts: webserver
   tasks:
+    - name: Create ciencia_datos user
+      user:
+        name: ciencia_datos
+        shell: /bin/bash
+        groups: docker
+        append: true
+      become: true
     - name: Set time zone
       timezone:
         name: America/Los_Angeles
