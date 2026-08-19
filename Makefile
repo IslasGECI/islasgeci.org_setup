@@ -14,6 +14,7 @@ all: create_server sleep host_known setup_server
 
 check:
 	cd src && terraform fmt -check
+	ansible-lint ansible/webserver.yml
 
 clean:
 	rm --force --recursive src/.terraform
