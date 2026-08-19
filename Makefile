@@ -19,6 +19,7 @@ clean:
 	rm --force --recursive src/.terraform
 	rm --force src/.terraform.lock.hcl
 	rm --force src/terraform.tfstate*
+	rm --force state/*
 
 create_server: init
 	cd src && terraform apply -auto-approve
@@ -35,6 +36,7 @@ host_known:
 
 init:
 	cd src && \
+	mkdir --parents state \
 	terraform init
 
 setup_server:
