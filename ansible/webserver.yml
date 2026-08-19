@@ -88,6 +88,7 @@
         src: /root/.vault/
         dest: /home/ciencia_datos/.vault/
         mode: '0600'
+      become: true
     - name: Start the container
       community.docker.docker_container:
         name: islasgeci.org
