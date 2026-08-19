@@ -3,7 +3,7 @@
   hosts: webserver
   tasks:
     - name: Set time zone
-      timezone:
+      community.general.timezone:
         name: America/Los_Angeles
       become: true
 
@@ -11,36 +11,36 @@
   hosts: webserver
   tasks:
     - name: Update system
-      apt:
+      ansible.builtin.apt:
         update_cache: true
       become: true
     - name: Install cURL
-      apt:
+      ansible.builtin.apt:
         name: "curl"
         state: present
       become: true
     - name: Install Docker
-      apt:
+      ansible.builtin.apt:
         name: "docker.io"
         state: present
       become: true
     - name: Install Docker-compose
-      apt:
+      ansible.builtin.apt:
         name: "docker-compose"
         state: present
       become: true
     - name: Install Git
-      apt:
+      ansible.builtin.apt:
         name: "git"
         state: present
       become: true
     - name: Install Make
-      apt:
+      ansible.builtin.apt:
         name: "make"
         state: present
       become: true
     - name: Install pip
-      apt:
+      ansible.builtin.apt:
         name: "python3-pip"
         state: present
       become: true
@@ -54,9 +54,9 @@
         name: docker
         install_deps: true
       notify: Restart server
-    - name: Add '{{ ansible_user_id }}' to docker group
-      user:
-        name: "{{ ansible_user_id }}"
+    - name: Add to docker group "{{ ansible_facts['user_id'] }}"
+      ansible.builtin.user:
+        name: "{{ ansible_facts['user_id'] }}"
         groups: docker
         append: true
       become: true
@@ -72,19 +72,19 @@
   hosts: webserver
   tasks:
     - name: Create ciencia_datos user
-      user:
+      ansible.builtin.user:
         name: ciencia_datos
         shell: /bin/bash
         groups: docker
         append: true
       become: true
     - name: Copy SSH keys
-      copy:
+      ansible.builtin.copy:
         src: /root/.ssh/id_rsa
         dest: /tmp/id_rsa
         mode: '0600'
     - name: Copy secrets
-      copy:
+      ansible.builtin.copy:
         src: /root/.vault/
         dest: /home/ciencia_datos/.vault/
         mode: '0600'
