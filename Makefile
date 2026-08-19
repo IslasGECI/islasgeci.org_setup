@@ -16,10 +16,9 @@ check:
 	cd src && terraform fmt -check
 
 clean:
-	rm --force --recursive src/.terraform
-	rm --force src/.terraform.lock.hcl
-	rm --force src/terraform.tfstate*
-	rm --force state/*
+	rm --force --recursive state/.terraform
+	rm --force state/.terraform.lock.hcl
+	rm --force state/terraform.tfstate*
 
 create_server: init
 	cd src && terraform apply -auto-approve
